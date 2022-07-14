@@ -7,8 +7,7 @@ public class UIObject
 {
   public RectTransform UI;
     public List<UIObject> children;
-    public float vertFlex;
-    public float horFlex;
+    public float flex;
 
     bool layoutGroup;
     bool layoutGroupVert;
@@ -27,12 +26,12 @@ public class UIObject
 
     public Vector2 size;
 
-    public UIObject (RectTransform UIItem, float vertFlex, float horFlex)
+    public UIObject (RectTransform UIItem, float flex)
     {
 
         this.UI = UIItem;
-        this.vertFlex = vertFlex;
-        this.horFlex = horFlex;
+        this.flex = flex;
+       
 
 
         children = new List<UIObject>();
@@ -96,17 +95,45 @@ public class UIObject
         }
 
         //Add children flexes
-        for (int i = 0; i < children.Count; i ++)
+        if (layoutGroupVert)
         {
-            eqY.addPolynomial2(children[i].vertFlex, 1);
+            for (int i = 0; i < children.Count; i++)
+            {
+                eqY.addPolynomial2(children[i].flex, 1);
+            }
+        } else
+        {
+            eqY.addPolynomial2(1, 1);
         }
+       
 
         float hVal = eqY.solveX(size.y);
 
 
+        Equation eqX = new Equation();
 
+        //Adding padding Flexes 
+        eqX.addPolynomial2(padLeftFlex, 1);
+        eqX.addPolynomial2(padRightFlex, 1);
 
-        float wVal = 0;
+        //Add spacing flex
+        if (!layoutGroupVert && layoutGroup)
+        {
+            eqX.addPolynomial2(spacingFlex, 1);
+        }
+        //Add children
+        if (!layoutGroupVert)
+        {
+            for (int i = 0; i < children.Count; i++)
+            {
+                eqX.addPolynomial2(children[i].flex, 1);
+            }
+        } else
+        {
+            eqX.addPolynomial2(1, 1);
+        }
+
+        float wVal = eqX.solveX(size.x);
 
 
         if (layoutGroup)
@@ -115,21 +142,39 @@ public class UIObject
             {
                 UI.gameObject.GetComponent<VerticalLayoutGroup>().padding.top =  (int)(padUpFlex * hVal);
                 UI.gameObject.GetComponent<VerticalLayoutGroup>().padding.bottom = (int)(padDownFlex * hVal);
-            } else
-            {
                 UI.gameObject.GetComponent<VerticalLayoutGroup>().padding.left = (int)(padLeftFlex * wVal);
                 UI.gameObject.GetComponent<VerticalLayoutGroup>().padding.right = (int)(padRightFlex * wVal);
+
+                UI.gameObject.GetComponent<VerticalLayoutGroup>().spacing = (int)((spacingFlex * hVal)/(children.Count-1));
+
+            } else
+            {
+                UI.gameObject.GetComponent<HorizontalLayoutGroup>().padding.top = (int)(padUpFlex * hVal);
+                UI.gameObject.GetComponent<HorizontalLayoutGroup>().padding.bottom = (int)(padDownFlex * hVal);
+                UI.gameObject.GetComponent<HorizontalLayoutGroup>().padding.left = (int)(padLeftFlex * wVal);
+                UI.gameObject.GetComponent<HorizontalLayoutGroup>().padding.right = (int)(padRightFlex * wVal);
+
+                UI.gameObject.GetComponent<HorizontalLayoutGroup>().spacing = (int)((spacingFlex * wVal) / (children.Count - 1));
             }
         }
 
+        //Set current object and all children
 
-        //Horizontal
+        UI.sizeDelta = size;
 
-        //IDK
-        //Well
-        
+        //Loop through children
+        for (int i = 0; i < children.Count; i ++)
+        {
+            if (layoutGroupVert)
+            {
+                children[i].setSize(new Vector2(wVal, hVal*children[i].flex));
+            } else
+            {
+                children[i].setSize(new Vector2(wVal * children[i].flex, hVal));
+            }
+        }
 
-
+        //Now this should theoretically be ready to test
 
 
 
