@@ -53,9 +53,18 @@ public class UIScript : MonoBehaviour
     [SerializeField] float menuFillFac;
     [SerializeField] float settingsFillFac;
     [SerializeField] float subTextFac;
-
-
     [SerializeField] float titleFac;
+
+
+    [Header("Flexes")]
+    [SerializeField] float titleFlex;
+    [SerializeField] float buttonFlex;
+    [SerializeField] float padUpFlex;
+    [SerializeField] float padDownFlex;
+    [SerializeField] float padLeftFlex;
+    [SerializeField] float padRightFlex;
+    [SerializeField] float spacingFlex;
+
 
     // Start is called before the first frame update
     void Start()
@@ -71,7 +80,7 @@ public class UIScript : MonoBehaviour
 
     public void setUI ()
     {
-        
+        /*
 
         float screenWidth = Screen.width;
         float screenHeight = Screen.height;
@@ -105,26 +114,19 @@ public class UIScript : MonoBehaviour
 
         settings.gameObject.GetComponent<Button>().onClick.AddListener(settingsFunc);
         play.gameObject.GetComponent<Button>().onClick.AddListener(menuToPlay);
-
+        */
 
 
 
         //Settings
-        settingsUI();
+        // settingsUI();
+        settingsFlex();
 
-        saveUI();
+        //saveUI();
+        saveFlex();
 
         equation();
 
-        /*
-        [SerializeField] RectTransform settingsSec;
-        [SerializeField] RectTransform settingTitle;
-        [SerializeField] RectTransform setting1;
-        [SerializeField] RectTransform setting2;
-        [SerializeField] RectTransform volumeTitle;
-        [SerializeField] RectTransform volumeSlide;
-
-        */
     }
 
     public void settingsUI ()
@@ -141,18 +143,7 @@ public class UIScript : MonoBehaviour
 
         float settingsTitleHeight = ((secHeight - (secHeight * settingsFillFac)) * titleFac) /2;
 
-       // float spacing = (secHeight - (settingsBtnHeight * 4 + settingsTitleHeight + settingsTitleHeight * subTextFac)) / 5;
-
-       // Debug.Log(settingsBtnHeight);
-        //Debug.Log(settingsTitleHeight);
-       
-        //Debug.Log(settingsBtnHeight);
-
-
-
         float settingsSpacing = (secHeight - (settingsTitleHeight + (settingsBtnHeight * 4) + (settingsTitleHeight * subTextFac))) / settingsSec.gameObject.transform.childCount - 1;
-
-        //Debug.Log(settingsSpacing);
 
         settingsBtnLayout.spacing = settingsSpacing;
 
@@ -171,7 +162,43 @@ public class UIScript : MonoBehaviour
 
         settingsBack.gameObject.GetComponent<Button>().onClick.AddListener(backSettToMenu);
 
-       // Debug.Log(secHeight * settingsFillFac);
+    }
+
+    public void settingsFlex()
+    {
+
+        UIObject settingsSecUI = new UIObject(settingsSec, 1);
+
+        UIObject setTitle = new UIObject(settingTitle, titleFlex);
+        UIObject setBTN1 = new UIObject(setting1, buttonFlex);
+        UIObject setBTN2 = new UIObject(setting2, buttonFlex);
+        UIObject setVolTit= new UIObject(volumeTitle, titleFlex);
+        UIObject setVol = new UIObject(volumeSlide, buttonFlex);
+        UIObject setBack = new UIObject(settingsBack, buttonFlex);
+
+        settingsSecUI.setHorizontalPadding(padLeftFlex, padRightFlex);
+        settingsSecUI.setVerticalPadding(padUpFlex, padDownFlex);
+
+        settingsSecUI.setSpacingFlex(spacingFlex);
+
+        settingsSecUI.addChild(setTitle);
+        settingsSecUI.addChild(setBTN1);
+        settingsSecUI.addChild(setBTN2);
+        settingsSecUI.addChild(setVolTit);
+        settingsSecUI.addChild(setVol);
+        settingsSecUI.addChild(setBack);
+
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
+
+        settingsSecUI.setSize(new Vector2(screenWidth * 0.8f, screenHeight * 0.8f));
+
+        //Handle size
+        RectTransform handle = volumeSlide.gameObject.transform.GetChild(2).GetChild(0).GetComponent<RectTransform>();
+        handle.sizeDelta = new Vector2(setVol.size.y, 0);
+
+        settingsBack.gameObject.GetComponent<Button>().onClick.AddListener(backSettToMenu);
+
 
     }
 
@@ -251,6 +278,65 @@ public class UIScript : MonoBehaviour
 
     }
 
+    public void saveFlex ()
+    {
+        UIObject saveBTNLayout = new UIObject(saveButtons, 1);
+
+        //Set padding for this and stuff
+
+        saveBTNLayout.setSpacingFlex(3);
+
+        UIObject saveTit = new UIObject(saveTitle, 2);
+        UIObject saveSecs = new UIObject(saveSaves, 6);
+        UIObject saveB = new UIObject(saveBack, 1);
+
+
+        UIObject saveItem1 = new UIObject(save1, 1);
+
+
+        //Develop a branching system maybe that grabs all children underneath for the UI
+        UIObject image = new UIObject(save1.gameObject.transform.GetChild(0).GetComponent<RectTransform>(), 3);
+        UIObject textSec = new UIObject(save1.gameObject.transform.GetChild(1).GetComponent<RectTransform>(), 1.5f);
+
+        UIObject Name = new UIObject(save1.gameObject.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>(), 1);
+        UIObject LastP = new UIObject(save1.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>(), 1);
+        UIObject Prog = new UIObject(save1.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>(), 1);
+
+        textSec.addChild(Name);
+        textSec.addChild(LastP);
+        textSec.addChild(Prog);
+
+        saveItem1.addChild(image);
+        saveItem1.addChild(textSec);
+
+        saveSecs.addChild(saveItem1);
+
+
+        saveBTNLayout.addChild(saveTit);
+        saveBTNLayout.addChild(saveSecs);
+        saveBTNLayout.addChild(saveB);
+
+        saveBTNLayout.setSize(new Vector2(1000, 800));
+
+        saveBack.gameObject.GetComponent<Button>().onClick.AddListener(saveToMenu);
+
+
+        /*
+
+         save1.sizeDelta = new Vector2(saveSlotW, saveSlotH);
+
+    save1.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, imageDim);
+    save1.gameObject.transform.GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, saveSlotH - imageDim);
+    save1.gameObject.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, textH);
+    save1.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, textH);
+    save1.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, textH);
+        */
+
+
+
+
+    }
+
 
     public void saveToMenu ()
     {
@@ -298,15 +384,36 @@ public class UIScript : MonoBehaviour
         Debug.Log(test2.solveX(300));
 
 
+        UIObject panelUI = new UIObject(buttons, 1);
+
+        UIObject titleUI = new UIObject(title, titleFlex);
+        UIObject playUI = new UIObject(play,buttonFlex);
+        UIObject settingsUI = new UIObject(settings, buttonFlex);
+        UIObject quitUI = new UIObject(quit, buttonFlex);
 
 
+        panelUI.addChild(titleUI);
+        panelUI.addChild(playUI);
+        panelUI.addChild(settingsUI);
+        panelUI.addChild(quitUI);
+        
+        panelUI.setVerticalPadding(padUpFlex, padDownFlex);
 
+        panelUI.setHorizontalPadding(padLeftFlex, padRightFlex);
+        panelUI.setSpacingFlex(spacingFlex);
 
+        panelUI.setSize(new Vector2(1000, 800));
 
+        settings.gameObject.GetComponent<Button>().onClick.AddListener(settingsFunc);
+        play.gameObject.GetComponent<Button>().onClick.AddListener(menuToPlay);
 
 
 
     }
+
+
+    
+
 
 
 
