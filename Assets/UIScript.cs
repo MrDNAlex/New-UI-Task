@@ -290,27 +290,14 @@ public class UIScript : MonoBehaviour
         UIObject saveSecs = new UIObject(saveSaves, 6);
         UIObject saveB = new UIObject(saveBack, 1);
 
-
-        UIObject saveItem1 = new UIObject(save1, 1);
-
-
+      
         //Develop a branching system maybe that grabs all children underneath for the UI
-        UIObject image = new UIObject(save1.gameObject.transform.GetChild(0).GetComponent<RectTransform>(), 3);
-        UIObject textSec = new UIObject(save1.gameObject.transform.GetChild(1).GetComponent<RectTransform>(), 1.5f);
+      
+        saveSecs.addChild(SaveCard(save1));
+        saveSecs.addChild(SaveCard(save2));
+        saveSecs.addChild(SaveCard(save3));
 
-        UIObject Name = new UIObject(save1.gameObject.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>(), 1);
-        UIObject LastP = new UIObject(save1.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>(), 1);
-        UIObject Prog = new UIObject(save1.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>(), 1);
-
-        textSec.addChild(Name);
-        textSec.addChild(LastP);
-        textSec.addChild(Prog);
-
-        saveItem1.addChild(image);
-        saveItem1.addChild(textSec);
-
-        saveSecs.addChild(saveItem1);
-
+        saveSecs.setSpacingFlex(1);
 
         saveBTNLayout.addChild(saveTit);
         saveBTNLayout.addChild(saveSecs);
@@ -320,21 +307,28 @@ public class UIScript : MonoBehaviour
 
         saveBack.gameObject.GetComponent<Button>().onClick.AddListener(saveToMenu);
 
+    }
 
-        /*
-
-         save1.sizeDelta = new Vector2(saveSlotW, saveSlotH);
-
-    save1.gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, imageDim);
-    save1.gameObject.transform.GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, saveSlotH - imageDim);
-    save1.gameObject.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, textH);
-    save1.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, textH);
-    save1.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>().sizeDelta = new Vector2(imageDim, textH);
-        */
+    public UIObject SaveCard (RectTransform save)
+    {
+        UIObject saveItem = new UIObject(save, 1);
 
 
+        UIObject image = new UIObject(save.gameObject.transform.GetChild(0).GetComponent<RectTransform>(), 3);
+        UIObject textSec = new UIObject(save.gameObject.transform.GetChild(1).GetComponent<RectTransform>(), 1.5f);
 
+        UIObject Name = new UIObject(save.gameObject.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>(), 1);
+        UIObject LastP = new UIObject(save.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>(), 1);
+        UIObject Prog = new UIObject(save.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>(), 1);
 
+        textSec.addChild(Name);
+        textSec.addChild(LastP);
+        textSec.addChild(Prog);
+
+        saveItem.addChild(image);
+        saveItem.addChild(textSec);
+
+        return saveItem;
     }
 
 

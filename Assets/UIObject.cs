@@ -193,6 +193,11 @@ using UnityEngine.UI;
 
 
 
+    public static UIObject newObj (RectTransform UI, float flex)
+    {
+        return new UIObject(UI, flex);
+    }
+
 
 
     }
