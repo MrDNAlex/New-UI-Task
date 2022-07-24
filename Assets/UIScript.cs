@@ -120,12 +120,12 @@ public class UIScript : MonoBehaviour
 
         //Settings
         // settingsUI();
-        settingsFlex();
+       // settingsFlex();
 
         //saveUI();
         saveFlex();
 
-        equation();
+       // equation();
 
     }
 
@@ -293,9 +293,9 @@ public class UIScript : MonoBehaviour
       
         //Develop a branching system maybe that grabs all children underneath for the UI
       
-        saveSecs.addChild(SaveCard(save1));
-        saveSecs.addChild(SaveCard(save2));
-        saveSecs.addChild(SaveCard(save3));
+        saveSecs.addChild(SaveCard(save1, 3, 1.5f, 1));
+        saveSecs.addChild(SaveCard(save2,2, 0.5f, 1));
+        saveSecs.addChild(SaveCard(save3, 5, 1.5f, 1));
 
         saveSecs.setSpacingFlex(1);
 
@@ -309,17 +309,17 @@ public class UIScript : MonoBehaviour
 
     }
 
-    public UIObject SaveCard (RectTransform save)
+    public UIObject SaveCard (RectTransform save, float imageFlex, float textFlex, float text2flex)
     {
         UIObject saveItem = new UIObject(save, 1);
 
 
-        UIObject image = new UIObject(save.gameObject.transform.GetChild(0).GetComponent<RectTransform>(), 3);
-        UIObject textSec = new UIObject(save.gameObject.transform.GetChild(1).GetComponent<RectTransform>(), 1.5f);
+        UIObject image = new UIObject(save.gameObject.transform.GetChild(0).GetComponent<RectTransform>(), imageFlex);
+        UIObject textSec = new UIObject(save.gameObject.transform.GetChild(1).GetComponent<RectTransform>(), textFlex);
 
-        UIObject Name = new UIObject(save.gameObject.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>(), 1);
-        UIObject LastP = new UIObject(save.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>(), 1);
-        UIObject Prog = new UIObject(save.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>(), 1);
+        UIObject Name = new UIObject(save.gameObject.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>(), text2flex);
+        UIObject LastP = new UIObject(save.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>(), text2flex);
+        UIObject Prog = new UIObject(save.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>(), text2flex);
 
         textSec.addChild(Name);
         textSec.addChild(LastP);
@@ -404,14 +404,6 @@ public class UIScript : MonoBehaviour
 
 
     }
-
-
-    
-
-
-
-
-
 
 
 }
