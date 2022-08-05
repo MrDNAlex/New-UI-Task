@@ -120,12 +120,14 @@ public class UIScript : MonoBehaviour
 
         //Settings
         // settingsUI();
-       // settingsFlex();
+        settingsFlex();
 
-        //saveUI();
+        saveUI();
         saveFlex();
 
-       // equation();
+        equation();
+
+        testEq();
 
     }
 
@@ -314,12 +316,18 @@ public class UIScript : MonoBehaviour
         UIObject saveItem = new UIObject(save, 1);
 
 
+        saveItem.setSquare();
+
+        saveItem.setHorizontalPadding(0.5f, 0.5f);
+
         UIObject image = new UIObject(save.gameObject.transform.GetChild(0).GetComponent<RectTransform>(), imageFlex);
         UIObject textSec = new UIObject(save.gameObject.transform.GetChild(1).GetComponent<RectTransform>(), textFlex);
 
         UIObject Name = new UIObject(save.gameObject.transform.GetChild(1).GetChild(0).GetComponent<RectTransform>(), text2flex);
         UIObject LastP = new UIObject(save.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>(), text2flex);
         UIObject Prog = new UIObject(save.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>(), text2flex);
+
+        image.setSquare();
 
         textSec.addChild(Name);
         textSec.addChild(LastP);
@@ -400,7 +408,32 @@ public class UIScript : MonoBehaviour
 
         settings.gameObject.GetComponent<Button>().onClick.AddListener(settingsFunc);
         play.gameObject.GetComponent<Button>().onClick.AddListener(menuToPlay);
+    }
 
+    public void testEq ()
+    {
+
+        Equation test = new Equation();
+
+        Polynomial p1 = new Polynomial(3, 1);
+        Polynomial p2 = new Polynomial(4, 1);
+        Polynomial p3 = new Polynomial(2, 1);
+        Polynomial p4 = new Polynomial(6, 1);
+        Polynomial p5 = new Polynomial(3, 0);
+
+        test.addPolynomial(p1);
+        test.addPolynomial(p2);
+        test.addPolynomial(p3);
+        test.addPolynomial(p4);
+        test.addPolynomial(p5);
+
+        test.polyClean();
+        for (int i = 0; i < test.cleanPoly.Count; i ++)
+        {
+            Debug.Log("Poly " + i + ": " + test.cleanPoly[i].coefficient);
+        }
+
+        Debug.Log(test.solveX(20));
 
 
     }
