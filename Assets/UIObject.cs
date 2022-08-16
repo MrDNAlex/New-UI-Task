@@ -289,7 +289,9 @@ public class UIObject
         {
             eqY.addPolynomial2(1, 1);
         }
-        return eqY.solveX(size.y);
+
+
+        return eqY.solveSingleEQ(size.y);
     }
 
     public float solveW()
@@ -331,7 +333,7 @@ public class UIObject
             eqX.addPolynomial2(1, 1);
         }
 
-        return eqX.solveX(size.x);
+        return eqX.solveSingleEQ(size.x);
     }
 
     //Next week or if we get to use this create a system that allows you to make a blueprint or prefab type thing and then you can input a list of rectTransforms to instance which things will be affected
@@ -405,7 +407,7 @@ public class UIObject
         //Self flex
         width.addPolynomial2(1, 1);
 
-        return width.solveX(fullSize);
+        return width.solveSingleEQ(fullSize);
     }
 
     public float defaultHeightCalc(float fullSize)
@@ -418,7 +420,7 @@ public class UIObject
         height.addPolynomial2(1, 1);
 
 
-        return height.solveX(fullSize);
+        return height.solveSingleEQ(fullSize);
     }
 
 

@@ -120,14 +120,15 @@ public class UIScript : MonoBehaviour
 
         //Settings
         // settingsUI();
-        settingsFlex();
 
-        saveUI();
-        saveFlex();
+        //saveUI();
 
-        equation();
+//        settingsFlex();
+  //      saveFlex();
 
-        testEq();
+    //    equation();
+
+        testEq2();
 
     }
 
@@ -296,10 +297,14 @@ public class UIScript : MonoBehaviour
         //Develop a branching system maybe that grabs all children underneath for the UI
       
         saveSecs.addChild(SaveCard(save1, 3, 1.5f, 1));
+       // saveSecs.addChild(SaveCard(save2, 3, 1.5f, 1));
+       // saveSecs.addChild(SaveCard(save3, 3, 1.5f, 1));
+
+        
         saveSecs.addChild(SaveCard(save2,2, 0.5f, 1));
         saveSecs.addChild(SaveCard(save3, 5, 1.5f, 1));
 
-        saveSecs.setSpacingFlex(1);
+       // saveSecs.setSpacingFlex(1);
 
         saveBTNLayout.addChild(saveTit);
         saveBTNLayout.addChild(saveSecs);
@@ -316,9 +321,13 @@ public class UIScript : MonoBehaviour
         UIObject saveItem = new UIObject(save, 1);
 
 
-        saveItem.setSquare();
+        //Ok there seems to be problems with setSquare with this new Method of things
 
-        saveItem.setHorizontalPadding(0.5f, 0.5f);
+
+
+        //saveItem.setSquare();
+
+        saveItem.setHorizontalPadding(0.1f, 0.1f);
 
         UIObject image = new UIObject(save.gameObject.transform.GetChild(0).GetComponent<RectTransform>(), imageFlex);
         UIObject textSec = new UIObject(save.gameObject.transform.GetChild(1).GetComponent<RectTransform>(), textFlex);
@@ -327,7 +336,7 @@ public class UIScript : MonoBehaviour
         UIObject LastP = new UIObject(save.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>(), text2flex);
         UIObject Prog = new UIObject(save.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>(), text2flex);
 
-        image.setSquare();
+       // image.setSquare();
 
         textSec.addChild(Name);
         textSec.addChild(LastP);
@@ -357,6 +366,8 @@ public class UIScript : MonoBehaviour
 
     public void equation ()
     {
+
+        /*
         Equation test = new Equation();
 
         Polynomial p1 = new Polynomial(1, 1);
@@ -384,6 +395,8 @@ public class UIScript : MonoBehaviour
        // test.addPolynomial(t2p4);
 
         Debug.Log(test2.solveX(300));
+
+        */
 
 
         UIObject panelUI = new UIObject(buttons, 1);
@@ -433,10 +446,224 @@ public class UIScript : MonoBehaviour
             Debug.Log("Poly " + i + ": " + test.cleanPoly[i].coefficient);
         }
 
-        Debug.Log(test.solveX(20));
+        Debug.Log(test.solveSingleEQ(20));
 
 
     }
+
+    public void testEq2 ()
+    {
+        Equation2 testEq = new Equation2();
+
+        //x = 6
+        //y = 2
+
+        /*
+        Polynomial2 p1 = new Polynomial2(10, 0, "x");
+       // Polynomial2 p2 = new Polynomial2(10, 0, "y");
+        Polynomial2 p3 = new Polynomial2(5, 1, "x");
+        Polynomial2 p4 = new Polynomial2(2, 2, "x");
+        //Polynomial2 p5 = new Polynomial2(-3, 1, "y");
+       // Polynomial2 p6 = new Polynomial2(4, 2, "y");
+        */
+
+        /*
+        Polynomial2 p1 = new Polynomial2(3, 1, "x"); //X = 12, y = 11, z = 10
+        Polynomial2 p2 = new Polynomial2(5, 1, "x");
+        Polynomial2 p3 = new Polynomial2(4, 1, "x");
+        Polynomial2 p4 = new Polynomial2(5, 1, "y");
+        Polynomial2 p5 = new Polynomial2(3, 1, "y");
+        Polynomial2 p6 = new Polynomial2(3, 1, "y");
+        Polynomial2 p7 = new Polynomial2(8, 1, "z");
+        Polynomial2 p8 = new Polynomial2(2, 1, "z");
+
+        Polynomial2 p9 = new Polynomial2(3, 2, "x"); // x= 5
+        Polynomial2 p10 = new Polynomial2(2, 2, "x"); // y = 9
+        Polynomial2 p11 = new Polynomial2(7, 2, "y");
+        Polynomial2 p12 = new Polynomial2(2, 2, "y");
+
+        Polynomial2 p13 = new Polynomial2(1, 0, "x"); // x = 6
+        Polynomial2 p14 = new Polynomial2(2, 0, "x");
+        Polynomial2 p15 = new Polynomial2(3, 0, "x"); // y = 8
+        Polynomial2 p16 = new Polynomial2(4, 0, "y");
+        Polynomial2 p17 = new Polynomial2(4, 0, "y");
+        
+        */
+
+
+        /*
+
+        testEq.addPolynomial(p1);
+        testEq.addPolynomial(p2);
+        testEq.addPolynomial(p3);
+        testEq.addPolynomial(p4);
+         testEq.addPolynomial(p5);
+         testEq.addPolynomial(p6);
+
+        
+        testEq.addPolynomial(p7);
+        testEq.addPolynomial(p8);
+        testEq.addPolynomial(p9);
+        testEq.addPolynomial(p10);
+        testEq.addPolynomial(p11);
+        testEq.addPolynomial(p12);
+        testEq.addPolynomial(p13);
+        testEq.addPolynomial(p14);
+        testEq.addPolynomial(p15);
+        testEq.addPolynomial(p16);
+        testEq.addPolynomial(p17);
+
+
+        */
+
+
+
+        // List<PolyOutput> values = new List<PolyOutput>();
+
+        // values.Add(new PolyOutput("x", 6));
+        // values.Add(new PolyOutput("y", 2));
+        /*
+        for (int i = 0; i < testEq.polynomials.Count; i++)
+        {
+            Debug.Log("Poly " + i + " : " + testEq.polynomials[i].coefficient + testEq.polynomials[i].variable + " Pow : " + testEq.polynomials[i].power);
+        }
+
+          testEq.polyClean();
+
+
+        for (int i = 0; i < testEq.cleanPoly.Count; i++)
+        {
+            Debug.Log("Poly " + i + " : " + testEq.cleanPoly[i].coefficient + testEq.cleanPoly[i].variable + " Pow : " + testEq.cleanPoly[i].power);
+        }
+        */
+
+        //testEq.output(values);
+        /*
+                testEq.derive();
+
+                Debug.Log("Derived Version");
+                for (int i = 0; i < testEq.cleanPoly.Count; i++)
+                {
+                    Debug.Log("Poly " + i + " : " + testEq.cleanPoly[i].coefficient + testEq.cleanPoly[i].variable + " Pow : " + testEq.cleanPoly[i].power);
+                }
+
+
+                Debug.Log(testEq.solveX(20));
+              */
+
+
+        //
+        //Alright to solve this we will need to make a matrix class
+        //We will need to make a multivariable equation solver function (using multivariable Newton raphson) 
+
+
+        Equation eq1 = new Equation();
+
+
+        Polynomial p1 = new Polynomial(2, 1, "x");
+        Polynomial p2 = new Polynomial(4, 1, "x");
+        Polynomial p3 = new Polynomial(2, 1, "y");
+        Polynomial p4 = new Polynomial(3, 1, "y");
+        Polynomial p5 = new Polynomial(4, 1, "z");
+        Polynomial p6 = new Polynomial(5, 1, "z");
+        Polynomial p7 = new Polynomial(3, 0, "x");
+        Polynomial p8 = new Polynomial(2, 0, "x");
+
+
+        //6x, 11y, 5
+
+        eq1.addPolynomial(p1);
+        eq1.addPolynomial(p2);
+        eq1.addPolynomial(p3);
+        eq1.addPolynomial(p4);
+        eq1.addPolynomial(p5);
+        eq1.addPolynomial(p6);
+        eq1.addPolynomial(p7);
+        eq1.addPolynomial(p8);
+
+        eq1.polyClean();
+
+        /*
+        for (int i = 0; i < eq1.cleanPoly.Count; i++)
+        {
+            Debug.Log("Poly " + i + " : " + eq1.cleanPoly[i].coefficient + eq1.cleanPoly[i].variable + " Pow : " + eq1.cleanPoly[i].power);
+        }
+
+        eq1.polyClean();
+
+        for (int i = 0; i < eq1.cleanPoly.Count; i++)
+        {
+            Debug.Log("Poly " + i + " : " + eq1.cleanPoly[i].coefficient + eq1.cleanPoly[i].variable + " Pow : " + eq1.cleanPoly[i].power);
+        }
+        */
+
+        //eq1.setEquation(eq1.cleanPoly);
+
+        Equation eq2 = createRandomEQ();
+        Equation eq3 = createRandomEQ();
+       // Equation eq4 = createRandomEQ();
+        //  Equation eq2 = eq1;
+
+        List<Equation> mat = new List<Equation>();
+        mat.Add(eq1);
+        mat.Add(eq2);
+       mat.Add(eq3);
+       // mat.Add(eq4);
+
+
+        Matrix matrix = new Matrix(mat);
+
+
+
+
+
+
+    }
+
+
+    public Equation createRandomEQ ()
+    {
+
+        Equation eq = new Equation();
+
+        //Generate Pow 0
+        for (int i = 0; i < Mathf.FloorToInt(Random.Range(1, 5)); i++)
+        {
+            Polynomial j = new Polynomial(Mathf.FloorToInt(Random.Range(-10f, 10f)), 0);
+            eq.addPolynomial(j);
+        }
+
+        //Generate X
+        for (int i = 0; i < Mathf.FloorToInt(Random.Range(1, 5)); i ++)
+        {
+            Polynomial j = new Polynomial(Mathf.FloorToInt(Random.Range(1f, 10f)), 1, "x");
+            eq.addPolynomial(j);
+        }
+
+        //Generate Y
+        for (int i = 0; i < Mathf.FloorToInt(Random.Range(1, 5)); i++)
+        {
+            Polynomial j = new Polynomial(Mathf.FloorToInt(Random.Range(1f, 10f)), 1, "y");
+            eq.addPolynomial(j);
+        }
+
+        
+        //Generate Z
+        for (int i = 0; i < Mathf.FloorToInt(Random.Range(1, 5)); i++)
+        {
+            Polynomial j = new Polynomial(Mathf.FloorToInt(Random.Range(1f, 10f)), 1, "z");
+            eq.addPolynomial(j);
+        }
+        
+
+        eq.polyClean();
+
+        eq.displayAllPoly();
+
+        return eq;
+    }
+
+
 
 
 }

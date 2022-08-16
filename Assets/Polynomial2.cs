@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Polynomial
+public class Polynomial2 
 {
     public float coefficient;
     public float power;
     public string variable;
 
 
-    public Polynomial(float coef, float pow, string variable = "x")
+    public Polynomial2(float coef, float pow, string variable = null)
     {
         //Coefficient
         //Power
@@ -19,20 +19,10 @@ public class Polynomial
         if (variable != null)
         {
             this.variable = variable;
-        }
-        else if (pow >= 1)
+        } else if (pow >= 1)
         {
             this.variable = "x"; //First variable type
         }
-
-        if (power == 0)
-        {
-            this.variable = "";
-        }
-
-
-
-
     }
 
     //Make a function to return output (when x input), func for derivative
