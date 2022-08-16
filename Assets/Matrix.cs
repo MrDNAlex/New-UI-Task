@@ -297,7 +297,42 @@ public class Matrix
                     //Divide the row until the diagonal is equal to 1
 
                     //Do gaussian elimination above and under while also adding 
+                    Debug.Log("Before inverse");
+                    displayMatrix(matCopy, answerColumn);
 
+                    for (int i = 0; i < matCopy[0].Count; i++)
+                    {
+                        //Divide row
+
+
+                        for (int j = 0; j < matCopy.Count; j++)
+                        {
+
+                            //Top becomes whatever height and width is 
+                            //Denom becomes the diagonal
+                            //Current num is the height and width and 
+                            //Multiply is same as bottom 
+
+
+                            for (int k = 0; k < matCopy[0].Count; k++)
+                            {
+                                if (i == j)
+                                {
+
+                                } else
+                                {
+                                    matCopy[j][i] = matCopy[j][i] - (matCopy[j][i] / matCopy[i][i]) * matCopy[j][k];
+                                }
+                               
+
+                            }
+                        }
+                    }
+
+                    displayMatrix(matCopy, answerColumn);
+
+
+                    /*
 
                     for (int e = 0; e < matCopy.Count; e ++)
                     {
@@ -316,6 +351,28 @@ public class Matrix
                         //
                         //Oh boy am I doing this wrong, let's get back to it later once I'm home and once I get a bit of sleep and can think straight
                         //
+
+
+
+                        //Alright so first row it's all down as normal
+
+
+
+
+                        //Ok so go left to right   --->
+
+                        //At every 
+
+
+                        //Top becomes
+
+
+                       
+
+
+
+
+
 
 
 
@@ -347,6 +404,9 @@ public class Matrix
                                     // Debug.Log(matCopy[j][k] + "- (" + OGTop + "/" + OGDenom + ")" + "*" + matCopy[i][k]);
                                 }
                             }
+
+                            displayMatrix(matCopy, answerColumn);
+                            displayMatrix(unitMat, answerColumn);
                         }
 
                         //
@@ -378,12 +438,15 @@ public class Matrix
                                     // Debug.Log(matCopy[j][k] + "- (" + OGTop + "/" + OGDenom + ")" + "*" + matCopy[i][k]);
                                 }
                             }
+                            displayMatrix(matCopy, answerColumn);
+                            displayMatrix(unitMat, answerColumn);
                         }
 
                     }
+                    */
 
 
-                    displayMatrix(unitMat, answerColumn);
+
 
 
 
@@ -399,6 +462,7 @@ public class Matrix
 
 
                 }
+                    
 
 
                 /*

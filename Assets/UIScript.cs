@@ -658,7 +658,7 @@ public class UIScript : MonoBehaviour
 
         eq.polyClean();
 
-        eq.displayAllPoly();
+        //eq.displayAllPoly();
 
         return eq;
     }
