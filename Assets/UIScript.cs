@@ -119,17 +119,17 @@ public class UIScript : MonoBehaviour
 
 
         //Settings
-        // settingsUI();
+       //  settingsUI();
 
         //saveUI();
 
-//        settingsFlex();
-  //      saveFlex();
+                settingsFlex();
+              saveFlex();
 
-    //    equation();
+            equation();
 
-        testEq2();
-
+        //testEq2();
+      //  solveCircuit();
     }
 
     public void settingsUI ()
@@ -336,7 +336,7 @@ public class UIScript : MonoBehaviour
         UIObject LastP = new UIObject(save.gameObject.transform.GetChild(1).GetChild(1).GetComponent<RectTransform>(), text2flex);
         UIObject Prog = new UIObject(save.gameObject.transform.GetChild(1).GetChild(2).GetComponent<RectTransform>(), text2flex);
 
-       // image.setSquare();
+        image.setSquare();
 
         textSec.addChild(Name);
         textSec.addChild(LastP);
@@ -556,33 +556,63 @@ public class UIScript : MonoBehaviour
         //Alright to solve this we will need to make a matrix class
         //We will need to make a multivariable equation solver function (using multivariable Newton raphson) 
 
-
+        
         Equation eq1 = new Equation();
 
 
-        Polynomial p1 = new Polynomial(2, 1, "x");
-        Polynomial p2 = new Polynomial(4, 1, "x");
-        Polynomial p3 = new Polynomial(2, 1, "y");
-        Polynomial p4 = new Polynomial(3, 1, "y");
-        Polynomial p5 = new Polynomial(4, 1, "z");
-        Polynomial p6 = new Polynomial(5, 1, "z");
-        Polynomial p7 = new Polynomial(3, 0, "x");
-        Polynomial p8 = new Polynomial(2, 0, "x");
+        Polynomial p1 = new Polynomial(3f, 1, "x");
+        //Polynomial p2 = new Polynomial(4f, 1, "x");
+        Polynomial p3 = new Polynomial(-1f, 1, "y");//2
+        //Polynomial p4 = new Polynomial(3f, 1, "y");//3
+       // Polynomial p5 = new Polynomial(4f, 1, "z");//4
+        Polynomial p6 = new Polynomial(0f, 1, "z");//5
+        Polynomial p7 = new Polynomial(-10f, 0, "x");
+       // Polynomial p8 = new Polynomial(2f, 0, "x");
 
 
         //6x, 11y, 5
 
         eq1.addPolynomial(p1);
-        eq1.addPolynomial(p2);
+       // eq1.addPolynomial(p2);
         eq1.addPolynomial(p3);
-        eq1.addPolynomial(p4);
-        eq1.addPolynomial(p5);
+       // eq1.addPolynomial(p4);
+        //eq1.addPolynomial(p5);
         eq1.addPolynomial(p6);
         eq1.addPolynomial(p7);
-        eq1.addPolynomial(p8);
+       // eq1.addPolynomial(p8);
 
         eq1.polyClean();
 
+
+        Equation eq2 = new Equation();
+
+        Polynomial e2p1 = new Polynomial(-2f, 1, "x");//4
+        Polynomial e2p2 = new Polynomial(3f, 1, "y");
+        Polynomial e2p3 = new Polynomial(-1f, 1, "z");//3
+        Polynomial e2p4 = new Polynomial(0f, 0, "x");
+
+        eq2.addPolynomial(e2p1);
+        eq2.addPolynomial(e2p2);
+        eq2.addPolynomial(e2p3);
+        eq2.addPolynomial(e2p4);
+
+
+        eq2.polyClean();
+
+        Equation eq3 = new Equation();
+
+        Polynomial e3p1 = new Polynomial(0f, 1, "x");//13
+        Polynomial e3p2 = new Polynomial(-1.5f, 1, "y");//15
+        Polynomial e3p3 = new Polynomial(2.5f, 1, "z");
+        Polynomial e3p4 = new Polynomial(0f, 0, "x");
+
+        eq3.addPolynomial(e3p1);
+        eq3.addPolynomial(e3p2);
+        eq3.addPolynomial(e3p3);
+        eq3.addPolynomial(e3p4);
+
+        eq3.polyClean();
+        
         /*
         for (int i = 0; i < eq1.cleanPoly.Count; i++)
         {
@@ -598,28 +628,231 @@ public class UIScript : MonoBehaviour
         */
 
         //eq1.setEquation(eq1.cleanPoly);
-
-        Equation eq2 = createRandomEQ();
-        Equation eq3 = createRandomEQ();
+       // Equation eq1 = createRandomEQ();
+       // Equation eq2 = createRandomEQ();
+       // Equation eq3 = createRandomEQ();
        // Equation eq4 = createRandomEQ();
         //  Equation eq2 = eq1;
+
+      
+        // mat.Add(eq4);
+
+      
+
+
+
+
+
+        /*
+        Matrix matrix = new Matrix(derMat);
+
+
+        List<List<float>> mat2 = new List<List<float>>();
+
+
+        for (int i = 0; i < 3; i ++)
+        {
+            List<float> row = new List<float>();
+
+            row.Add(i);
+
+            mat2.Add(row);
+        }
+        */
+
+     //   matrix.displayMatrix(matrix.matrix, matrix.answerColumn);
+     //   matrix.displayMatrix(mat2, matrix.answerColumn);
+
+
+      //  List<List<float>> multiMat = matrix.matrixMulti(matrix.matrix, mat2);
+
+
+      //  matrix.displayMatrix(multiMat, matrix.answerColumn);
+
+        Debug.Log("Reach the end");
+
 
         List<Equation> mat = new List<Equation>();
         mat.Add(eq1);
         mat.Add(eq2);
-       mat.Add(eq3);
-       // mat.Add(eq4);
+        mat.Add(eq3);
+
+        List<Equation> derMat = derived();
+
+     
 
 
-        Matrix matrix = new Matrix(mat);
+
+        float diffPerX;
+        float diffPerY;
+        float diffPerZ;
+
+        float newX = 0;
+        float newY = 0;
+        float newZ = 0;
+
+
+        //Initial Guesses
+        float x = 10;
+        float y = 10;
+        float z = 10;
 
 
 
+        //Create matrix 
+        Matrix invMatrix = new Matrix(derMat);
+
+        Matrix regMat = new Matrix(mat);
+
+        Debug.Log("Matrix");
+        regMat.displayMatrix(regMat.matrix, regMat.answerColumn);
+       
+
+
+        for (int i = 0; i < 100; i ++)
+        {
+            //This will act as a vector
+            List<List<float>> outputVec = new List<List<float>>();
+
+            List<PolyOutput> vals = new List<PolyOutput>();
+            vals.Add(new PolyOutput("x", x));
+            vals.Add(new PolyOutput("y", y));
+            vals.Add(new PolyOutput("z", z));
+           
+
+            for (int j = 0; j < 3; j ++)
+            {
+                List<float> row = new List<float>();
+                mat[j].displayAllPoly();
+                Debug.Log(mat[j].output(vals));
+                row.Add(mat[j].output(vals));
+                outputVec.Add(row);
+            }
+
+            // invMatrix.displayMatrix(outputVec, invMatrix.answerColumn);
+            Debug.Log("Matrix Multi");
+            invMatrix.displayMatrix(invMatrix.matrixMulti(invMatrix.inverseMat, outputVec), invMatrix.answerColumn);
+            newX = x - invMatrix.matrixMulti(invMatrix.inverseMat, outputVec)[0][0];
+            newY = y - invMatrix.matrixMulti(invMatrix.inverseMat, outputVec)[1][0];
+            newZ = z - invMatrix.matrixMulti(invMatrix.inverseMat, outputVec)[2][0];
+
+
+
+            diffPerX = Mathf.Abs((((float)newX - (float)x) / (float)newX) * 100);
+            diffPerY = Mathf.Abs((((float)newY - (float)y) / (float)newY) * 100);
+            diffPerZ = Mathf.Abs((((float)newZ - (float)z) / (float)newZ) * 100);
+
+
+
+           // Debug.Log(diffPerX + " | " + diffPerY + " | " + diffPerZ + " | ");
+
+            x = newX;
+            y = newY;
+            z = newZ;
+
+        }
+
+        Debug.Log("X: " + x);
+        Debug.Log("Y: " + y);
+        Debug.Log("Z: " + z);
+
+
+        //Oh right, completely forgot, we need to grab the partial derivatives
+
+
+
+
+        /*
+        Equation EQ = new Equation();
+
+
+        EQ.addPolynomial(new Polynomial(3, 1, "x"));
+        EQ.addPolynomial(new Polynomial(5, 2, "x"));
+        EQ.addPolynomial(new Polynomial(5, 2, "y"));
+
+        Equation partial = EQ.deriveWithRespect("x");
+
+        partial.displayAllPoly();
+        */
+
+
+
+
+
+        
 
 
 
     }
 
+
+    public List<Equation> derived ()
+    {
+        Equation eq1 = new Equation();
+
+
+        Polynomial p1 = new Polynomial(3f, 1, "x");
+       // Polynomial p2 = new Polynomial(4f, 1, "x");
+        Polynomial p3 = new Polynomial(0f, 1, "y");//2
+        Polynomial p4 = new Polynomial(0f, 1, "y");//3
+        Polynomial p5 = new Polynomial(0f, 1, "z");//4
+        Polynomial p6 = new Polynomial(0f, 1, "z");//5
+      //  Polynomial p7 = new Polynomial(3f, 0, "x");
+      //  Polynomial p8 = new Polynomial(2f, 0, "x");
+
+
+        //6x, 11y, 5
+
+        eq1.addPolynomial(p1);
+       // eq1.addPolynomial(p2);
+        eq1.addPolynomial(p3);
+        eq1.addPolynomial(p4);
+        eq1.addPolynomial(p5);
+        eq1.addPolynomial(p6);
+        //eq1.addPolynomial(p7);
+        //eq1.addPolynomial(p8);
+
+        eq1.polyClean();
+
+
+        Equation eq2 = new Equation();
+
+        Polynomial e2p1 = new Polynomial(0f, 1, "x");//4
+        Polynomial e2p2 = new Polynomial(3f, 1, "y");
+        Polynomial e2p3 = new Polynomial(0f, 1, "z");//3
+       // Polynomial e2p4 = new Polynomial(0f, 0, "x");
+
+        eq2.addPolynomial(e2p1);
+        eq2.addPolynomial(e2p2);
+        eq2.addPolynomial(e2p3);
+       // eq2.addPolynomial(e2p4);
+
+
+        eq2.polyClean();
+
+        Equation eq3 = new Equation();
+       
+
+        Polynomial e3p1 = new Polynomial(0f, 1, "x");//13
+        Polynomial e3p2 = new Polynomial(0f, 1, "y");//15
+        Polynomial e3p3 = new Polynomial(2.5f, 1, "z");
+       // Polynomial e3p4 = new Polynomial(0f, 0, "x");
+
+        eq3.addPolynomial(e3p1);
+        eq3.addPolynomial(e3p2);
+        eq3.addPolynomial(e3p3);
+      //  eq3.addPolynomial(e3p4);
+
+        eq3.polyClean();
+
+        List<Equation> derMat = new List<Equation>();
+
+        derMat.Add(eq1);
+        derMat.Add(eq2);
+        derMat.Add(eq3);
+
+        return derMat;
+    }
 
     public Equation createRandomEQ ()
     {
@@ -629,21 +862,21 @@ public class UIScript : MonoBehaviour
         //Generate Pow 0
         for (int i = 0; i < Mathf.FloorToInt(Random.Range(1, 5)); i++)
         {
-            Polynomial j = new Polynomial(Mathf.FloorToInt(Random.Range(-10f, 10f)), 0);
+            Polynomial j = new Polynomial(Mathf.Floor(Random.Range(-10f, 10f)), 0);
             eq.addPolynomial(j);
         }
 
         //Generate X
         for (int i = 0; i < Mathf.FloorToInt(Random.Range(1, 5)); i ++)
         {
-            Polynomial j = new Polynomial(Mathf.FloorToInt(Random.Range(1f, 10f)), 1, "x");
+            Polynomial j = new Polynomial(Mathf.Floor(Random.Range(1f, 10f)), 1, "x");
             eq.addPolynomial(j);
         }
 
         //Generate Y
         for (int i = 0; i < Mathf.FloorToInt(Random.Range(1, 5)); i++)
         {
-            Polynomial j = new Polynomial(Mathf.FloorToInt(Random.Range(1f, 10f)), 1, "y");
+            Polynomial j = new Polynomial(Mathf.Floor(Random.Range(1f, 10f)), 1, "y");
             eq.addPolynomial(j);
         }
 
@@ -651,7 +884,7 @@ public class UIScript : MonoBehaviour
         //Generate Z
         for (int i = 0; i < Mathf.FloorToInt(Random.Range(1, 5)); i++)
         {
-            Polynomial j = new Polynomial(Mathf.FloorToInt(Random.Range(1f, 10f)), 1, "z");
+            Polynomial j = new Polynomial(Mathf.Floor(Random.Range(1f, 10f)), 1, "z");
             eq.addPolynomial(j);
         }
         
@@ -662,6 +895,283 @@ public class UIScript : MonoBehaviour
 
         return eq;
     }
+
+
+    public void solveCircuit ()
+    {
+
+        Equation norm1 = new Equation();
+
+        Polynomial n1p1 = new Polynomial(3, 1, "x");
+        Polynomial n1p2 = new Polynomial(-1, 1, "y");
+        Polynomial n1p3 = new Polynomial(0, 1, "z");
+        Polynomial n1p4 = new Polynomial(-10, 0, "x");
+
+        norm1.addPolynomial(n1p1);
+        norm1.addPolynomial(n1p2);
+        norm1.addPolynomial(n1p3);
+        norm1.addPolynomial(n1p4);
+
+        norm1.polyClean();
+
+        Debug.Log("EQ 1");
+        norm1.displayAllPoly();
+
+        Equation norm2 = new Equation();
+
+        Polynomial n2p1 = new Polynomial(-2, 1, "x");
+        Polynomial n2p2 = new Polynomial(3, 1, "y");
+        Polynomial n2p3 = new Polynomial(-1, 1, "z");
+        Polynomial n2p4 = new Polynomial(0, 0, "x");
+
+        norm2.addPolynomial(n2p1);
+        norm2.addPolynomial(n2p2);
+        norm2.addPolynomial(n2p3);
+        norm2.addPolynomial(n2p4);
+
+        norm2.polyClean();
+
+        Debug.Log("EQ 2");
+        norm2.displayAllPoly();
+
+        Equation norm3 = new Equation();
+
+        Polynomial n3p1 = new Polynomial(0, 1, "x");
+        Polynomial n3p2 = new Polynomial(-1.5f, 1, "y");
+        Polynomial n3p3 = new Polynomial(2.5f, 1, "z");
+        Polynomial n3p4 = new Polynomial(0, 0, "x");
+
+        norm3.addPolynomial(n3p1);
+        norm3.addPolynomial(n3p2);
+        norm3.addPolynomial(n3p3);
+        norm3.addPolynomial(n3p4);
+
+        norm3.polyClean();
+
+        Debug.Log("EQ 3");
+        norm3.displayAllPoly();
+
+        List<Equation> idk = new List<Equation>();
+
+        idk.Add(norm1);
+        idk.Add(norm2);
+        idk.Add(norm3);
+
+        List<PolyOutput> vals1 = new List<PolyOutput>();
+        vals1.Add(new PolyOutput("x", 1));
+        vals1.Add(new PolyOutput("y", 1));
+        vals1.Add(new PolyOutput("z", 1));
+
+        Debug.Log("Norm 1 " + norm1.output(vals1));
+
+        Debug.Log("Norm 2 " + norm2.output(vals1));
+        Debug.Log("Norm 3 " + norm3.output(vals1));
+
+
+        List<Equation> der = new List<Equation>();
+
+        Equation dnorm1 = new Equation();
+
+        Polynomial dn1p1 = new Polynomial(3, 1, "x");
+        Polynomial dn1p2 = new Polynomial(0, 1, "y");
+        Polynomial dn1p3 = new Polynomial(0, 1, "z");
+        Polynomial dn1p4 = new Polynomial(0, 0, "x");
+
+        dnorm1.addPolynomial(dn1p1);
+        dnorm1.addPolynomial(dn1p2);
+        dnorm1.addPolynomial(dn1p3);
+        dnorm1.addPolynomial(dn1p4);
+
+        dnorm1.polyClean();
+
+        Debug.Log("EQ 1");
+        dnorm1.displayAllPoly();
+
+        Equation dnorm2 = new Equation();
+
+        Polynomial dn2p1 = new Polynomial(0, 1, "x");
+        Polynomial dn2p2 = new Polynomial(3, 1, "y");
+        Polynomial dn2p3 = new Polynomial(0, 1, "z");
+        Polynomial dn2p4 = new Polynomial(0, 0, "x");
+
+        dnorm2.addPolynomial(dn2p1);
+        dnorm2.addPolynomial(dn2p2);
+        dnorm2.addPolynomial(dn2p3);
+        dnorm2.addPolynomial(dn2p4);
+
+        dnorm2.polyClean();
+
+        Debug.Log("EQ 2");
+        dnorm2.displayAllPoly();
+
+        Equation dnorm3 = new Equation();
+
+        Polynomial dn3p1 = new Polynomial(0, 1, "x");
+        Polynomial dn3p2 = new Polynomial(0, 1, "y");
+        Polynomial dn3p3 = new Polynomial(2.5f, 1, "z");
+        Polynomial dn3p4 = new Polynomial(0, 0, "x");
+
+        dnorm3.addPolynomial(dn3p1);
+        dnorm3.addPolynomial(dn3p2);
+        dnorm3.addPolynomial(dn3p3);
+        dnorm3.addPolynomial(dn3p4);
+
+        dnorm3.polyClean();
+
+        Debug.Log("EQ 3");
+        dnorm3.displayAllPoly();
+
+        der.Add(dnorm1);
+        der.Add(dnorm2);
+        der.Add(dnorm3);
+
+
+        Matrix inv = new Matrix(der);
+
+       // Matrix normal = new Matrix(idk);
+
+        float x = 1;
+        float y = 1;
+        float z = 1;
+
+        float newX = 0;
+        float newY = 0;
+        float newZ = 0;
+
+
+        for (int i = 0; i < 100; i ++)
+        {
+            List<List<float>> outputVec = new List<List<float>>();
+
+            List<PolyOutput> vals = new List<PolyOutput>();
+            vals.Add(new PolyOutput("x", x));
+            vals.Add(new PolyOutput("y", y));
+            vals.Add(new PolyOutput("z", z));
+
+
+            for (int j = 0; j < 3; j++)
+            {
+                List<float> row = new List<float>();
+
+                idk[j].displayAllPoly();
+
+                row.Add(idk[j].output(vals));
+                Debug.Log(idk[j].output(vals));
+                outputVec.Add(row);
+            }
+
+            newX = x - inv.matrixMulti(inv.inverseMat, outputVec)[0][0];
+            newY = y - inv.matrixMulti(inv.inverseMat, outputVec)[1][0];
+            newZ = z - inv.matrixMulti(inv.inverseMat, outputVec)[2][0];
+
+
+
+
+
+            x = newX;
+            y = newY;
+            z = newZ;
+
+
+        }
+
+
+        Debug.Log("X: " + x);
+        Debug.Log("Y: " + y);
+        Debug.Log("Z: " + z);
+
+
+
+    }
+
+
+
+    /*
+        Equation norm1 = new Equation();
+
+        Polynomial n1p1 = new Polynomial(3, 1, "x");
+        Polynomial n1p2 = new Polynomial(-1, 1, "y");
+        Polynomial n1p3 = new Polynomial(0, 1, "z");
+        Polynomial n1p4 = new Polynomial(-10, 0, "x");
+
+        norm1.addPolynomial(n1p1);
+        norm1.addPolynomial(n1p2);
+        norm1.addPolynomial(n1p3);
+        norm1.addPolynomial(n1p4);
+
+        norm1.polyClean();
+
+        Equation norm2 = new Equation();
+
+        Polynomial n2p1 = new Polynomial(-1, 1, "x");
+        Polynomial n2p2 = new Polynomial(3, 1, "y");
+        Polynomial n2p3 = new Polynomial(0, 0, "x");
+
+        norm2.addPolynomial(n2p1);
+        norm2.addPolynomial(n2p2);
+        norm2.addPolynomial(n2p3);
+
+        Equation norm23 = new Equation();
+
+        Polynomial n3p1 = new Polynomial(-1, 1, "x");
+        Polynomial n3p2 = new Polynomial(3, 1, "y");
+        Polynomial n3p3 = new Polynomial(0, 0, "x");
+
+        norm2.addPolynomial(n2p1);
+        norm2.addPolynomial(n2p2);
+        norm2.addPolynomial(n2p3);
+
+
+
+
+        norm2.polyClean();
+        List<Equation> idk = new List<Equation>();
+
+        idk.Add(norm1);
+        idk.Add(norm2);
+
+        List<PolyOutput> vals1 = new List<PolyOutput>();
+        vals1.Add(new PolyOutput("x", 1));
+        vals1.Add(new PolyOutput("y", 1));
+
+        Debug.Log("Norm 1 " + norm1.output(vals1));
+
+        Debug.Log("Norm 2 " + norm2.output(vals1));
+
+
+        List<Equation> der = new List<Equation>();
+
+
+        Equation dnorm1 = new Equation();
+
+        Polynomial dn1p1 = new Polynomial(3, 1, "x");
+        Polynomial dn1p2 = new Polynomial(0, 1, "y");
+        Polynomial dn1p3 = new Polynomial(0, 0, "x");
+
+        dnorm1.addPolynomial(dn1p1);
+        dnorm1.addPolynomial(dn1p2);
+        dnorm1.addPolynomial(dn1p3);
+
+        dnorm1.polyClean();
+
+        Equation dnorm2 = new Equation();
+
+        Polynomial dn2p1 = new Polynomial(0, 1, "x");
+        Polynomial dn2p2 = new Polynomial(3, 1, "y");
+        Polynomial dn2p3 = new Polynomial(0, 0, "x");
+
+        dnorm2.addPolynomial(dn2p1);
+        dnorm2.addPolynomial(dn2p2);
+        dnorm2.addPolynomial(dn2p3);
+
+        dnorm2.polyClean();
+
+        der.Add(dnorm1);
+        der.Add(dnorm2);
+
+
+        Matrix inv = new Matrix(der); 
+  */
 
 
 

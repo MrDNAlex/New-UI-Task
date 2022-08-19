@@ -30,9 +30,6 @@ public class Polynomial
             this.variable = "";
         }
 
-
-
-
     }
 
     //Make a function to return output (when x input), func for derivative
@@ -47,5 +44,18 @@ public class Polynomial
         this.coefficient = coefficient * power;
         this.power = this.power - 1;
     }
+
+    public Polynomial deriveWRespect (string var)
+    {
+        if (var == this.variable)
+        {
+            return new Polynomial(coefficient * power, power - 1, variable);     
+        } else
+        {
+           
+            return new Polynomial(0, power, variable);
+        }
+    }
+
 
 }

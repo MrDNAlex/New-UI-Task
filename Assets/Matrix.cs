@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Matrix 
+public class Matrix
 {
 
     // List<Equation> EQList;
 
 
-    List<List<float>> matrix = new List<List<float>>();
+   public List<List<float>> matrix = new List<List<float>>();
+    public List<List<float>> inverseMat = new List<List<float>>();
 
-   // List<Equation> matrix = new List<Equation>();
-    List<float> answerColumn = new List<float>();
+    // List<Equation> matrix = new List<Equation>();
+   public List<float> answerColumn = new List<float>();
 
 
     bool linear = true;
@@ -22,24 +23,25 @@ public class Matrix
 
     //Yeah I guess we are going to rework this shit
 
-    public Matrix (List<Equation> EQs)
+    public Matrix(List<Equation> EQs)
     {
-       // this.EQList = EQs;
+        // this.EQList = EQs;
 
-        
-      
+
+
         //Create a list
 
 
         //Check if system is linear
         foreach (Equation i in EQs)
         {
-           // i.polyClean();
+             i.polyClean();
             foreach (Polynomial j in i.cleanPoly)
             {
-               if (j.power == 1 || j.power == 0)
+                if (j.power == 1 || j.power == 0)
                 {
-                } else
+                }
+                else
                 {
                     linear = false;
                 }
@@ -50,17 +52,13 @@ public class Matrix
         if (linear)
         {
             List<Polynomial> columns = new List<Polynomial>();
-
-
             //Make a section to add all the 0 power stuff to the answer column
-
-
             //Place all 0 power coefficients in the answer list
-            for (int i = 0; i < EQs.Count; i ++)
+            for (int i = 0; i < EQs.Count; i++)
             {
                 answerColumn.Add(0);
 
-                for (int j = 0; j < EQs[i].polynomials.Count; j ++)
+                for (int j = 0; j < EQs[i].polynomials.Count; j++)
                 {
                     if (EQs[i].polynomials[j].power == 0)
                     {
@@ -76,13 +74,13 @@ public class Matrix
             //Add all unique types of polynomials (This will determine the order in the matrix) 
             foreach (Equation i in EQs)
             {
-               // i.polyClean();
+                // i.polyClean();
                 foreach (Polynomial j in i.cleanPoly)
                 {
                     Polynomial newPoly = new Polynomial(0, j.power, j.variable);
 
                     bool contained = false;
-                   // Debug.Log(j.variable + "^" + j.power);
+                    // Debug.Log(j.variable + "^" + j.power);
 
                     if (!Equation.containsPoly(columns, newPoly))
                     {
@@ -130,8 +128,8 @@ public class Matrix
                         {
                             if (j.power == k.power)
                             {
-                               // Debug.Log("Adding: " + k.coefficient);
-                                row.Add(k.coefficient);
+                                // Debug.Log("Adding: " + k.coefficient);
+                                row.Add((float)k.coefficient);
                             }
                         }
                     }
@@ -139,15 +137,15 @@ public class Matrix
                 matrix.Add(row);
             }
 
-            displayMatrix(matrix, answerColumn);
+          //  displayMatrix(matrix, answerColumn);
 
 
-            displayMatrix(gaussianedMatrix(), answerColumn);
+          //  displayMatrix(gaussianedMatrix(), answerColumn);
 
 
 
 
-
+            inverseMat = getInverseMatrix();
 
 
             /*
@@ -228,49 +226,30 @@ public class Matrix
             }
 
             */
-            
-        } else
+
+        }
+        else
         {
             Debug.Log("System is not linear, we cannot solve it");
         }
 
-        getInverseMatrix(this);
+
 
     }
 
-    
-    
-    public void getInverseMatrix (Matrix mat)
+
+
+    public List<List<float>> getInverseMatrix()
     {
-
-        // i = 1
-        // 1 2 3 | 1 0 0
-        // 4 5 6 | 0 1 0  --> R2 - 4*r1 =      4 - 4/1 * 1    and 5 - 4/1 *2
-        // 7 8 9 | 0 0 1
-        //
-        //
-        // 1 2 3 | 1 0 0
-        // 0 -3 -6 | 0 1 0  --> R2 - 4*r1 = 
-        // 7 8 9 | 0 0 1
-
-        // i >>
-        // j controls how far down 
-        //
-
-        //num(i, j) - num () / og (i,i) 
-
-
-        //Check if linear 
-
-        //J controls height, i controls width
-
-
+        List<List<float>> invMat = new List<List<float>>();
         //Determine if matrix is square
         //Determine if determinant is zero, if so inverse doesn't exist
 
         //If matrix was linear
         if (linear)
         {
+            displayMatrix(matrix, answerColumn);
+
             //If matrix is square
             if (matrix.Count == matrix[0].Count)
             {
@@ -280,12 +259,11 @@ public class Matrix
 
                 Debug.Log("Determinant : " + det);
 
-
-
                 if (det == 0)
                 {
                     //Can't get inverse
-                } else
+                }
+                else
                 {
                     //Get inverse
 
@@ -297,205 +275,85 @@ public class Matrix
                     //Divide the row until the diagonal is equal to 1
 
                     //Do gaussian elimination above and under while also adding 
-                    Debug.Log("Before inverse");
-                    displayMatrix(matCopy, answerColumn);
+
+                   // displayMatrix(matCopy, answerColumn);
 
                     for (int i = 0; i < matCopy[0].Count; i++)
                     {
-                        //Divide row
+                        divideRow(unitMat, i, matCopy[i][i]);
+                        divideRow(matCopy, i, matCopy[i][i]);
 
-
+                       // displayMatrix(matCopy, answerColumn);
+                       // displayMatrix(unitMat, answerColumn);
+                        //Loop through height
                         for (int j = 0; j < matCopy.Count; j++)
                         {
+                            float OGTop = matCopy[j][i];
+                            float OGDenom = matCopy[i][i];
+                            //Loop through width again
 
-                            //Top becomes whatever height and width is 
-                            //Denom becomes the diagonal
-                            //Current num is the height and width and 
-                            //Multiply is same as bottom 
-
-
-                            for (int k = 0; k < matCopy[0].Count; k++)
+                            for (int k = 0; k < matrix[0].Count; k++)
                             {
+
                                 if (i == j)
                                 {
 
-                                } else
-                                {
-                                    matCopy[j][i] = matCopy[j][i] - (matCopy[j][i] / matCopy[i][i]) * matCopy[j][k];
                                 }
-                               
+                                else
+                                {
+                                    //  Debug.Log((unitMat[j][k] + "-" + "(" +matCopy[j][i] + "/" + matCopy[i][i] + ") *" + unitMat[i][k]));
+                                    unitMat[j][k] = unitMat[j][k] - (OGTop / OGDenom) * unitMat[i][k];
+                                    matCopy[j][k] = matCopy[j][k] - (OGTop / OGDenom) * matCopy[i][k];
+                                }
 
+
+                                //  Debug.Log("I = " + i + " " + "j = " + j + " " + "k = " + k + " ");
+                                // Debug.Log(matCopy[j][k] + "- (" + OGTop + "/" + OGDenom + ")" + "*" + matCopy[i][k]);
                             }
                         }
                     }
 
+                    //Clean up the numbers by snapping them
+
+                    for (int i = 0; i < matCopy.Count; i++)
+                    {
+                        for (int j = 0; j < matCopy[i].Count; j++)
+                        {
+                            matCopy[i][j] = DNAMath.snapToUnit(matCopy[i][j], 0.0001f);
+                        }
+                    }
+
+                    for (int i = 0; i < unitMat.Count; i++)
+                    {
+                        for (int j = 0; j < unitMat[i].Count; j++)
+                        {
+                            unitMat[i][j] = DNAMath.snapToUnit(unitMat[i][j], 0.0001f);
+                        }
+                    }
+
+                    Debug.Log("Final Matrix Inverse");
                     displayMatrix(matCopy, answerColumn);
+                    displayMatrix(unitMat, answerColumn);
 
-
-                    /*
-
-                    for (int e = 0; e < matCopy.Count; e ++)
-                    {
-
-                        divideRow(matCopy, e, matCopy[e][e]);
-
-                        divideRow(unitMat, e, matCopy[e][e]);
-
-
-                        //Do gaussian elimination on both sides 
-
-
-                        //Careful for first and last edge case
-
-
-                        //
-                        //Oh boy am I doing this wrong, let's get back to it later once I'm home and once I get a bit of sleep and can think straight
-                        //
-
-
-
-                        //Alright so first row it's all down as normal
-
-
-
-
-                        //Ok so go left to right   --->
-
-                        //At every 
-
-
-                        //Top becomes
-
-
-                       
-
-
-
-
-
-
-
-
-                        //
-                        //Bottom Gaussian 
-                        //
-
-                        for (int i = 0; i < matCopy[0].Count; i++)
-                        {
-                            //Loop through height
-                            for (int j = i + 1; j < matCopy.Count; j++)
-                            {
-                                float OGTop = matCopy[j][i];
-                                float OGDenom = matCopy[i][i];
-                                //Loop through width again
-
-                                //We could simplify this
-                                matCopy[j][i] = matCopy[j][i] - (OGTop / OGDenom) * matCopy[i][i];
-                                //Also add whatever it is to the unit matrix
-                               
-                                //Remove this section
-                                for (int k = i; k < matrix[0].Count; k++)
-                                {
-                                    matCopy[j][k] = matCopy[j][k] - (OGTop / OGDenom) * matCopy[i][k];
-
-                                    unitMat[j][k] -= (OGTop / OGDenom) * unitMat[i][k];
-
-                                    //  Debug.Log("I = " + i + " " + "j = " + j + " " + "k = " + k + " ");
-                                    // Debug.Log(matCopy[j][k] + "- (" + OGTop + "/" + OGDenom + ")" + "*" + matCopy[i][k]);
-                                }
-                            }
-
-                            displayMatrix(matCopy, answerColumn);
-                            displayMatrix(unitMat, answerColumn);
-                        }
-
-                        //
-                        //Top Gaussian
-                        //
-
-                        for (int i = 0; i < matCopy[0].Count; i++)
-                        {
-                            //Loop through height
-                            for (int j = i - 1; j >= 0; j--)
-                            {
-                                Debug.Log(j);
-                                float OGTop = matCopy[j][i];
-                                float OGDenom = matCopy[i][i];
-                                //Loop through width again
-
-                                //We could simplify this
-                                matCopy[j][i] = matCopy[j][i] - (OGTop / OGDenom) * matCopy[i][i];
-                                //Also add whatever it is to the unit matrix
-
-                                //Remove this section
-                                for (int k = 0; k < matrix[0].Count; k++)
-                                {
-                                    matCopy[j][k] = matCopy[j][k] - (OGTop / OGDenom) * matCopy[i][k];
-
-                                    unitMat[j][k] -= (OGTop / OGDenom) * unitMat[i][k];
-
-                                    //  Debug.Log("I = " + i + " " + "j = " + j + " " + "k = " + k + " ");
-                                    // Debug.Log(matCopy[j][k] + "- (" + OGTop + "/" + OGDenom + ")" + "*" + matCopy[i][k]);
-                                }
-                            }
-                            displayMatrix(matCopy, answerColumn);
-                            displayMatrix(unitMat, answerColumn);
-                        }
-
-                    }
-                    */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    invMat = unitMat;
 
 
                 }
-                    
-
-
-                /*
-
-                string matrixStr = "";
-
-                for (int i = 0; i < matCopy.Count; i++)
-                {
-                    string line = "";
-                    foreach (float j in matCopy[i])
-                    {
-                        line += j.ToString() + " ";
-                    }
-
-                    matrixStr += line + " | " + answerColumn[i] + "\n";
-                }
-
-                Debug.Log(matrixStr);
-
-                */
-
             }
             else
             {
+                //Debug.Log()
                 //Matrix is not square
                 Debug.Log("Matrix is not square");
             }
         }
 
-    }
-    
+        return invMat;
 
-    public float getDeterminant ()
+    }
+
+
+    public float getDeterminant()
     {
         float det = 0;
         if (linear)
@@ -507,7 +365,7 @@ public class Matrix
                 List<List<float>> matCopy = gaussianedMatrix();
 
 
-                
+
                 for (int i = 0; i < matCopy.Count; i++)
                 {
                     if (i == 0)
@@ -521,7 +379,7 @@ public class Matrix
                     }
                 }
 
-                Debug.Log("Determinant : " + det);
+                // Debug.Log("Determinant : " + det);
 
             }
             else
@@ -536,7 +394,7 @@ public class Matrix
         return det;
     }
 
-    public List<List<float>> gaussianedMatrix ()
+    public List<List<float>> gaussianedMatrix()
     {
 
 
@@ -559,15 +417,15 @@ public class Matrix
                 {
                     matCopy[j][k] = matCopy[j][k] - (OGTop / OGDenom) * matCopy[i][k];
 
-                  //  Debug.Log("I = " + i + " " + "j = " + j + " " + "k = " + k + " ");
-                   // Debug.Log(matCopy[j][k] + "- (" + OGTop + "/" + OGDenom + ")" + "*" + matCopy[i][k]);
+                    //  Debug.Log("I = " + i + " " + "j = " + j + " " + "k = " + k + " ");
+                    // Debug.Log(matCopy[j][k] + "- (" + OGTop + "/" + OGDenom + ")" + "*" + matCopy[i][k]);
                 }
             }
         }
         return matCopy;
     }
 
-    public List<List<float>> getMatrixCopy (List<List<float>> mat)
+    public List<List<float>> getMatrixCopy(List<List<float>> mat)
     {
         List<List<float>> copy = new List<List<float>>();
         foreach (List<float> i in mat)
@@ -583,19 +441,20 @@ public class Matrix
         return copy;
     }
 
-    public List<List<float>> getUnitMatrix (int size)
+    public List<List<float>> getUnitMatrix(int size)
     {
         List<List<float>> mat = new List<List<float>>();
 
-        for (int i = 0; i < size; i ++)
+        for (int i = 0; i < size; i++)
         {
             List<float> row = new List<float>();
-            for (int j = 0; j < size; j ++)
+            for (int j = 0; j < size; j++)
             {
                 if (j == i)
                 {
                     row.Add(1);
-                } else
+                }
+                else
                 {
                     row.Add(0);
                 }
@@ -606,7 +465,7 @@ public class Matrix
         return mat;
     }
 
-    public void displayMatrix (List<List<float>> mat, List<float> ans)
+    public void displayMatrix(List<List<float>> mat, List<float> ans)
     {
         string matrixStr = "";
 
@@ -625,13 +484,159 @@ public class Matrix
     }
 
 
-    public void divideRow (List<List<float>> mat, int row, float denom)
+    public void divideRow(List<List<float>> mat, int row, float denom)
     {
-        for (int i = 0; i < mat[row].Count; i ++)
+        List<float> idk = new List<float>();
+
+        for (int i = 0; i < mat[row].Count; i++)
         {
-            mat[row][i] = mat[row][i] / denom;
+            // Debug.Log(mat[row][i].GetType());
+            // Debug.Log(denom.GetType());
+
+            //idk.Add(divideNum(mat[row][i], denom));
+
+            // Debug.Log(divideNum(mat[row][i], denom));
+            // Debug.Log(divideNum(mat[row][i], denom).GetType());
+
+            // Debug.Log(Mathf.Approximately(mat[row][i] / (denom), ((float)mat[row][i]) / ((float)denom)) );
+
+
+            // Debug.Log((mat[row][i] / denom).GetType());
+            //Debug.Log(((float)(mat[row][i] / denom)).GetType());
+
+            mat[row][i] = divideNum(mat[row][i], denom);
+
+            // Debug.Log(mat[row][i].GetType());
+        }
+
+        foreach (float i in idk)
+        {
+            // Debug.Log("Idk " + i);
+        }
+        // mat[row] = idk;
+
+        foreach (float i in mat[row])
+        {
+            // Debug.Log("mat " + i);
         }
     }
+
+
+    public float divideNum(double a, double b)
+    {
+        // Debug.Log((float)(a / b));
+        return (float)(a / b);
+    }
+
+
+    public List<List<float>> matrixMulti(List<List<float>> matA, List<List<float>> matB)
+    {
+        //Check if right dimensions first
+
+        //Let's assume the case where B is the smaller matrix always
+
+        List<List<float>> outMat = new List<List<float>>();
+
+        if (matA[0].Count == matB.Count)
+        {
+            //Correct dimensions are met
+
+
+            //MatA is horizontal
+            //MatB is vertical
+
+
+            //Mat a
+
+            //
+            // 1 2 3
+            // 4 5 6
+            // 7 8 9 
+            //
+
+
+            //Mat B 
+
+            //
+            // 1 2
+            // 3 4
+            // 5 6
+            //
+
+            for (int i = 0; i < matB.Count; i++)
+            {
+
+                List<float> row = new List<float>();
+                for (int j = 0; j < matB[i].Count; j++)
+                {
+
+                    //Create the vectors
+                    //Vec 1 = vec a
+                    List<float> vec1 = new List<float>();
+                    List<float> vec2 = new List<float>();
+
+                    vec1 = getVector(matA, false, i);
+                    vec2 = getVector(matB, true, j);
+
+                    row.Add(vectorMulti(vec1, vec2));
+
+                }
+                outMat.Add(row);
+            }
+        }
+
+       // displayMatrix(outMat, answerColumn);
+        return outMat;
+    }
+
+    public float vectorMulti(List<float> Vec1, List<float> Vec2)
+    {
+        float sum = 0;
+        if (Vec1.Count == Vec2.Count)
+        {
+            for (int i = 0; i < Vec1.Count; i++)
+            {
+                sum += Vec1[i] * Vec2[i];
+            }
+        }
+
+        return sum;
+    }
+
+    public List<float> getVector(List<List<float>> Mat, bool vert, int number)
+    {
+        List<float> vec = new List<float>();
+
+
+        if (vert)
+        {
+            for (int i = 0; i < Mat.Count; i++)
+            {
+                vec.Add(Mat[i][number]);
+            }
+
+
+        }
+        else
+        {
+            //Horizontal
+
+            for (int i = 0; i < Mat[number].Count; i++)
+            {
+                vec.Add(Mat[number][i]);
+            }
+
+
+
+        }
+
+
+        return vec;
+
+
+    }
+
+
 
 
 

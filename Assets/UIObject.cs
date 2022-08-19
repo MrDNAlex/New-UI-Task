@@ -276,7 +276,12 @@ public class UIObject
                     // Debug.Log("Make equal to width");
                     // Debug.Log(wVal);
                     // Debug.Log(size);
+                    
+                    Debug.Log("Square");
+                    eqY.displayAllPoly();
                     eqY.addPolynomial2(Mathf.Min(size.y, size.x), 0); //wVal
+                    Debug.Log("After Add");
+                    eqY.displayAllPoly();
 
                 }
                 else
@@ -319,6 +324,7 @@ public class UIObject
                     // Debug.Log(hVal);
                     //  Debug.Log(size);
                     // Debug.Log(Mathf.Min(size.y, size.x));
+                    Debug.Log("Square");
                     eqX.addPolynomial2(Mathf.Min(size.y, size.x), 0); //hval
                 }
                 else

@@ -31,7 +31,21 @@ public class Equation
         }
 
         polynomials = cleanPoly;
+    }
 
+    public Equation deriveWithRespect (string var)
+    {
+        Equation derEQ = new Equation();
+        polyClean();
+        foreach (Polynomial i in cleanPoly)
+        {
+
+            Debug.Log(i.deriveWRespect(var).coefficient);
+
+            derEQ.addPolynomial(i.deriveWRespect(var));
+        }
+
+        return derEQ;
 
     }
 
@@ -47,7 +61,19 @@ public class Equation
         float value = 0;
 
         //Loop through to add the 
-        value = cleanPoly[0].output(0);
+        //value = cleanPoly[0].output(0);
+
+        //Check for power 0 first
+        foreach (Polynomial i in cleanPoly)
+        {
+            if (i.power == 0)
+            {
+                value += i.coefficient;
+            }
+        }
+
+
+
 
         foreach (PolyOutput i in vals)
         {
@@ -75,9 +101,17 @@ public class Equation
         //polyClean();
 
         int varNum = getVarCount();
+        Debug.Log("Var Count: " + getVarCount());
 
 
         // int varNum = getVarCount();
+
+        Equation newEQ = new Equation();
+        string var = getVarList()[0];
+        Equation derivative = new Equation();
+        float x = 1;
+        float newX = 0;
+        float diffPer = 0;
 
         float value = 0;
         switch (varNum)
@@ -92,39 +126,43 @@ public class Equation
                 break;
             case 1:
 
+
+              
+
                 //Ok gotta add the answer to the equation too as a negative aswell
 
                 //Ok let's make this like memory safe and shit
-
-
-                Equation newEQ = this;
-
-                //Idk fix this later
-                newEQ.addPolynomial2(-1 * ans, 0, "x");
-
-                newEQ.polyClean();
 
                 //One variable only, 
 
                 //Honestly just need to do newton raphson for this basically
 
-                Equation derivative = new Equation();
-                derivative.setEquation(newEQ.cleanPoly);
+               
+                newEQ.setEquation(cleanPoly);
+                newEQ.addPolynomial(new Polynomial(-ans, 0, var));
+                newEQ.polyClean();
+
+               // Debug.Log("New Equation");
+                //newEQ.displayCleanPoly();
+
+               
+                derivative.setEquation(cleanPoly);
                 derivative.derive();
+
+               // Debug.Log("Derivative");
+               // derivative.displayCleanPoly();
 
                 //loop for 100 or until change is under 0.1%
 
                 //X initial guess = 1
-                float x = 1;
-                float newX = 0;
-                float diffPer = 0;
+              
 
 
                 for (int i = 0; i < 100; i++)
                 {
                     List<PolyOutput> vals = new List<PolyOutput>();
 
-                    vals.Add(new PolyOutput(newEQ.cleanPoly[1].variable, x));
+                    vals.Add(new PolyOutput(var, x));
 
                     //Actually calculate the new X using Newton Raphson
                     newX = x - (newEQ.output(vals) / derivative.output(vals));
@@ -140,12 +178,71 @@ public class Equation
                     {
                         i = 100;
                     }
-
-
                 }
 
                 // Debug.Log(x);
                 value = x;
+
+                break;
+
+            case 2:
+
+                
+
+                //Ok gotta add the answer to the equation too as a negative aswell
+
+                //Ok let's make this like memory safe and shit
+
+                //One variable only, 
+
+                //Honestly just need to do newton raphson for this basically
+
+               // Equation newEQ = new Equation();
+                newEQ.setEquation(cleanPoly);
+                newEQ.addPolynomial(new Polynomial(-ans, 0, var));
+                newEQ.polyClean();
+
+                // Debug.Log("New Equation");
+                //newEQ.displayCleanPoly();
+
+               
+                derivative.setEquation(cleanPoly);
+                derivative.derive();
+
+                // Debug.Log("Derivative");
+                // derivative.displayCleanPoly();
+
+                //loop for 100 or until change is under 0.1%
+
+                //X initial guess = 1
+               
+
+
+                for (int i = 0; i < 100; i++)
+                {
+                    List<PolyOutput> vals = new List<PolyOutput>();
+
+                    vals.Add(new PolyOutput(var, x));
+
+                    //Actually calculate the new X using Newton Raphson
+                    newX = x - (newEQ.output(vals) / derivative.output(vals));
+
+
+                    diffPer = Mathf.Abs((((float)newX - (float)x) / (float)newX) * 100);
+
+                    x = newX;
+
+                    // Debug.Log(diffPer);
+
+                    if (diffPer < 0.001f && i > 5)
+                    {
+                        i = 100;
+                    }
+                }
+
+                // Debug.Log(x);
+                value = x;
+
 
                 break;
           
@@ -260,7 +357,7 @@ public class Equation
 
         //Save variable type and it's powers in order
 
-       
+        //displayAllPoly();
 
 
         foreach (Polynomial i in polynomials)
@@ -339,7 +436,7 @@ public class Equation
             }
         }
 
-      
+       // displayCleanPoly();
 
 
         /*
@@ -444,11 +541,6 @@ public class Equation
         this.polynomials = eq;
     }
 
-    public void deriveWRespect()
-    {
-
-    }
-
     public bool containsPoly (Polynomial poly)
     {
         foreach (Polynomial i in polynomials)
@@ -503,6 +595,16 @@ public class Equation
     {
         int count = 0;
         foreach (Polynomial i in polynomials)
+        {
+            Debug.Log("Poly " + count + " : " + i.coefficient + i.variable + " Pow : " + i.power);
+            count++;
+        }
+    }
+
+    public void displayCleanPoly()
+    {
+        int count = 0;
+        foreach (Polynomial i in cleanPoly)
         {
             Debug.Log("Poly " + count + " : " + i.coefficient + i.variable + " Pow : " + i.power);
             count++;
